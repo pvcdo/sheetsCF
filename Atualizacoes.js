@@ -1,5 +1,7 @@
 function atualizarDadosContratacaoAPI() {
 
+  console.log("teste de clasp")
+
   const planilha = SpreadsheetApp.getActiveSpreadsheet();
 
   var ultima_linha_dados_contratacao = planilha.getSheetByName("Dados de contratação").getRange("G2").getValue()
@@ -510,4 +512,27 @@ function atualizarDadosProtocolosAPITeste() {
 function atualizarFaseSituacaoTeste(){
   //pegar apenas os tickets que não estão encerrados
   // fazer uma comparação entre os tickets que estavam anteriormente como encerrados e verificar se estão com outra fase no relatório
+}
+
+function enviarHistorico () {
+  const ss = SpreadsheetApp.getActiveSpreadsheet()
+  const aba_lancamentos = ss.getSheetByName('LANÇAMENTOS')
+  const aba_historico = ss.getSheetByName('Historico')
+
+  const dados = aba_lancamentos.getRange(2,1,aba_lancamentos.getLastRow()-1,33).getValues()
+
+  const linhas_historico = []
+  const linhas_apagar = []
+  
+  dados.map((linha_lancamento,i_arr) => {
+    if(linha_lancamento[32] === 'historico' ){
+      linha_lancamento[32] = new Date()
+      linhas_historico.push(linha_lancamento)
+      linhas_apagar.push(i_arr + 2)
+    }
+  })
+
+  aba_historico.getRange(aba_historico.getLastRow()+1,1,linhas_historico.length,33).setValues(linhas_historico)
+
+  // trecho para apagar a linha que foi enviada da aba_lancamento para a aba_historico
 }
