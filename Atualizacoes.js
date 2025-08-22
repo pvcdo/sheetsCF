@@ -1,3 +1,20 @@
+var em_atualizacao
+
+function onOpen(){
+  const ui = SpreadsheetApp.getUi()
+  /*if(em_atualizacao){
+    ui.alert('Estamos atualizando a planilha, aguarde um instante')
+  }*/
+}
+
+function toggleAtualizacao(fase) {
+  if(fase === 'inicio'){
+    
+  }else{
+
+  }
+}
+
 function atualizarDadosContratacaoAPI() {
 
   console.log("teste de clasp")
@@ -515,11 +532,12 @@ function atualizarFaseSituacaoTeste(){
 }
 
 function enviarHistorico () {
+  
   const ss = SpreadsheetApp.getActiveSpreadsheet()
-  const aba_lancamentos = ss.getSheetByName('LANÇAMENTOS')
+  const aba_lancamentos = ss.getSheetByName('Cópia de LANÇAMENTOS')
   const aba_historico = ss.getSheetByName('Historico')
 
-  const dados = aba_lancamentos.getRange(2,1,aba_lancamentos.getLastRow()-1,33).getValues()
+  const dados = aba_lancamentos.getRange(1,1,aba_lancamentos.getLastRow(),33).getValues()
 
   const linhas_historico = []
   const linhas_apagar = []
@@ -528,11 +546,22 @@ function enviarHistorico () {
     if(linha_lancamento[32] === 'historico' ){
       linha_lancamento[32] = new Date()
       linhas_historico.push(linha_lancamento)
-      linhas_apagar.push(i_arr + 2)
+      linhas_apagar.push(i_arr)
     }
   })
 
   aba_historico.getRange(aba_historico.getLastRow()+1,1,linhas_historico.length,33).setValues(linhas_historico)
 
-  // trecho para apagar a linha que foi enviada da aba_lancamento para a aba_historico
+  const dados_sem_exc = dados.filter((el,id) => {
+    return !linhas_apagar.includes(id)
+  }).map(linha => {
+    return linha.slice(0,7)
+  })
+
+  //console.log('apagar dados anteriores e setar os novos dados')
+  
+  aba_lancamentos.getRange(1,1,aba_lancamentos.getLastRow(),7).clearContent()
+  aba_lancamentos.getRange(1,1,dados_sem_exc.length,7).setValues(dados_sem_exc)
+
+  
 }
