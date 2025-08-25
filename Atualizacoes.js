@@ -563,7 +563,5 @@ function enviarHistorico () {
   aba_lancamentos.getRange(1,1,aba_lancamentos.getLastRow(),7).clearContent()
   aba_lancamentos.getRange(1,1,dados_sem_exc.length,7).setValues(dados_sem_exc)
 
-  //enviando via git bash
-
   
 }
